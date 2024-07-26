@@ -24,7 +24,7 @@ function loop(){
 }
 
 window.addEventListener('click',function(){
-    atomArray.push(new Atom(mouseX,mouseY))
+    atomArray.push(new Atom(mouseX,mouseY,10,70))
 })
 
 window.addEventListener('mousemove',function(e){
