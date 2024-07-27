@@ -5,6 +5,8 @@ const ctx=canvas.getContext('2d')
 canvas.width=window.innerWidth
 canvas.height=window.innerHeight
 
+let brushArms=3
+
 let mouseX=0
 let mouseY=0
 let atomData=[]
@@ -26,20 +28,22 @@ function loop(){
         atom.update();
         atom.draw(ctx);
     });
+    console.table(atomData)
     requestAnimationFrame(loop)
 }
 
 window.addEventListener('click',function(){
     if (atomData.length<1) {
-        atomArray.push(new Atom(mouseX,mouseY,3,70,0))
+        atomArray.push(new Atom(mouseX,mouseY,brushArms,70,0,false))
     } else {
         const X=atomData.x
         const Y=atomData.y
         const length=atomData.length
-        const angle=atomData.angle
+        const angle=(atomData.angle)
         const connectX=X
         const connectY=Y
-        atomArray.push(new Atom(connectX,connectY,3,70,angle,true))
+        const armNumber=atomData.armNumber
+        atomArray.push(new Atom(connectX,connectY,brushArms,70,angle,true))
     }
 })
 
@@ -48,5 +52,10 @@ window.addEventListener('mousemove',function(e){
     mouseY=e.clientY
 })
 
+window.addEventListener('keyup',function(e){
+    if (e.key==" ") {
+        brushArms=window.prompt('How many arms?')
+    }
+})
 
 loop()

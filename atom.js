@@ -1,5 +1,5 @@
 class Atom{
-    constructor(x, y, arms, armlength, armAngle, attached=false ){
+    constructor(x, y, arms, armlength, armAngle, attached){
         this.x=x
         this.y=y
         this.armCount=arms
@@ -17,11 +17,7 @@ class Atom{
             this.turnAngle=0
         }
         for(let i=0;i<this.armCount;i++){
-            const armAngle1=lerp(
-                this.armSpread,
-                -this.armSpread,
-                this.armCount==1?0.5:i/(this.armCount-1)
-            )+this.turnAngle;
+            const armAngle1=(this.armSpread*i)+this.turnAngle
 
             const start1={x:this.x, y:this.y};
             const end1={
@@ -36,9 +32,8 @@ class Atom{
         for(let i=0;i<this.armCount;i++){
             let end=this.arms[i][1];
             ctx.stroke();
-            this.detectorArray.push(new Detector(end.x, end.y, this.armlength, this.armSpread*i))
+            this.detectorArray.push(new Detector(end.x, end.y, this.armlength, this.armSpread*i,i))
         }
-        console.log(this.armSpread)
 
         this.arms=[]
         this.armCount=arms
@@ -48,16 +43,11 @@ class Atom{
     
 
     update(){
-        console.log(atomData)
 
         this.arms=[];
         for(let i=0;i<this.armCount;i++){
-            const armAngle=lerp(
-                this.armSpread,
-                -this.armSpread,
-                this.armCount==1?0.5:i/(this.armCount-1)
-            )+this.turnAngle;
-
+            const armAngle=(i*this.armSpread)+this.turnAngle
+            console.log(this.turnAngle)
             const start={x:this.x, y:this.y};
             const end={
                 x:this.x-
@@ -73,12 +63,15 @@ class Atom{
                     angle:this.detectorArray[i].armAngle,
                     length:this.detectorArray[i].armLength,
                     x:this.detectorArray[i].x,
-                    y:this.detectorArray[i].y
+                    y:this.detectorArray[i].y,
+                    arm:this.detectorArray[i].armNumber
                 }
             }
         }
     }
     draw(ctx){
+        ctx.globalAlpha=1
+        ctx.fillStyle='black'
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false)
         ctx.fill()

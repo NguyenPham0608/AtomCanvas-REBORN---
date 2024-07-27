@@ -1,5 +1,5 @@
 class Detector{
-    constructor(x,y,armLength,armAngle){
+    constructor(x,y,armLength,armAngle,armNumber){
         this.x=x
         this.y=y
         this.dx=0
@@ -10,6 +10,7 @@ class Detector{
         this.armLength=armLength
         this.armAngle=armAngle
         this.touching=false
+        this.armNumber=armNumber
     }
     draw(ctx){
         this.dx=this.x-mouseX
