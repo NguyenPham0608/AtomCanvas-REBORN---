@@ -1,17 +1,21 @@
 class Atom{
-    constructor(x, y, arms, armlength ){
+    constructor(x, y, arms, armlength, armAngle, attached=false ){
         this.x=x
         this.y=y
         this.armCount=arms
         this.armlength=armlength
         this.radius=10
-        this.armSpread=(Math.PI*(arms-1))/this.armCount
+        this.armSpread=(Math.PI*2)/this.armCount
         this.arms=[]
-        this.turnAngle=this.armSpread/2
         this.detectorRadius=10
         this.halfDetectorRadius=this.detectorRadius/2
         this.detectorArray=[]
-
+        this.attached=attached
+        if (this.attached) {
+            this.turnAngle=armAngle 
+        }else{
+            this.turnAngle=0
+        }
         for(let i=0;i<this.armCount;i++){
             const armAngle1=lerp(
                 this.armSpread,
@@ -32,18 +36,20 @@ class Atom{
         for(let i=0;i<this.armCount;i++){
             let end=this.arms[i][1];
             ctx.stroke();
-            this.detectorArray.push(new Detector(end.x, end.y))
+            this.detectorArray.push(new Detector(end.x, end.y, this.armlength, this.armSpread*i))
         }
+        console.log(this.armSpread)
 
         this.arms=[]
         this.armCount=arms
         this.armlength=armlength
 
-
     }
     
 
     update(){
+        console.log(atomData)
+
         this.arms=[];
         for(let i=0;i<this.armCount;i++){
             const armAngle=lerp(
@@ -60,6 +66,16 @@ class Atom{
                     Math.cos(armAngle)*this.armlength
             };
             this.arms.push([start,end]);
+        }
+        for(let i=0; i<this.armCount;i++){
+            if(this.detectorArray[i].touching){
+                atomData={
+                    angle:this.detectorArray[i].armAngle,
+                    length:this.detectorArray[i].armLength,
+                    x:this.detectorArray[i].x,
+                    y:this.detectorArray[i].y
+                }
+            }
         }
     }
     draw(ctx){
